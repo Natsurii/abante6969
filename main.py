@@ -15,17 +15,17 @@ from io import BytesIO
 import os
 
 
-def chainmaker():
-	with open("headlines.txt",encoding='utf-8-sig') as f:
-		text = f.read()
-	text_model = markovify.NewlineText(text)
-	print(text_model.make_short_sentence(100,tries=100))
-
+	
 def fbpost():
 	logging.debug('Starting Facebook Thread')
 
 	fb_token = os.environ['TOKEN_PAINTMIN']
-	content = chainmaker() 
+	with open("headlines.txt",encoding='utf-8-sig') as f:
+		text = f.read()
+
+	text_model = markovify.NewlineText(text)
+	content = text_model.make_short_sentence(100,tries=100)
+	print(content)
 
 	graph = facebook.GraphAPI(access_token=fb_token, version="3.1")
 

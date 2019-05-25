@@ -1,0 +1,6 @@
+facebook-sdk
+tweepy
+schedule
+beautifulsoup4
+markovify
+Pillow

@@ -37,4 +37,8 @@ def fbpost():
 	logging.debug('=====================SUCCESS POSTING FB, Exiting....=====================')
 
 fbpost()
-schedule.every(10).minutes.do(fbpost)
+schedule.every(5).minutes.do(fbpost)
+
+while 1:
+    schedule.run_pending()
+    time.sleep(1)

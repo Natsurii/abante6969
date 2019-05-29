@@ -77,7 +77,7 @@ def fbpost():
 	
 	del image
 	del draw
-	fb _token = os.environ['TOKEN_PAINTMIN']
+	fb_token = os.environ['TOKEN_PAINTMIN']
 	graph = facebook.GraphAPI(access_token=fb_token, version="3.1")
 
 	post = graph.put_photo(image=open('outfile.png',"rb"),

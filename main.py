@@ -26,17 +26,33 @@ def fbpost():
 	text_model = markovify.NewlineText(text)
 	content = text_model.make_short_sentence(60,tries=100)
 
+	r = content.split(' ')
+	remove = ['ng', 'nang', 'sa', 'at', 'ang', 'na', 'kay','ni', 'mga', 'nila','nina']
+	for i in remove:
+		for f in r:
+			if i == f:
+				r.remove(f)
+			else:
+				pass
+		
 
-	f = random.choices(content.split(' '),k=1)
+	f = random.choices(r,k=1)
 	print(f)
 	safe=[]
 	for i in f:
 		safe.append(re.sub('[\W_]', '',str(i)))
 	safe
-	string = '%20'.join(safe)
-
+	string = '+'.join(safe)
 
 	html = urlopen(f'https://www.philstar.com/search/{string}')
+	#html = urlopen('https://www.philstar.com/search/maine%20saka')
+	print(html)
+	soup = BeautifulSoup(html, 'html.parser')
+	#imgs = soup.find_all('a',class_='img-holder')
+	
+
+
+	html = urlopen(f'https://www.philstar.com/search/{string}/age=720')
 	#html = urlopen('https://www.philstar.com/search/maine%20saka')
 	print(html)
 	soup = BeautifulSoup(html, 'html.parser')
@@ -57,6 +73,7 @@ def fbpost():
 	urls
 	imgurls = random.choice(urls)
 	urllib.request.urlretrieve(imgurls, "preface.png")
+
 
 	size = width, height = 712, 483;
 

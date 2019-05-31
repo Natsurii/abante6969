@@ -98,11 +98,10 @@ def fbpost():
 
 	#draw.text((21, 405),content, font=ar, fill='#000000')
 	image.save('outfile.png','PNG')
-	image.show()
-	
+
 	del image
 	del draw
-	''''
+	
 	fb_token = os.environ['TOKEN_PAINTMIN']
 	graph = facebook.GraphAPI(access_token=fb_token, version="3.1")
 
@@ -120,5 +119,5 @@ schedule.every().hour.at(':05').do(fbpost)  # run every xx:5:xx / 5 * * * * on c
 while 1:
     schedule.run_pending()
     time.sleep(1)
-'''
-fbpost()
+
+

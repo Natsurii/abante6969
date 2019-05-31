@@ -14,7 +14,7 @@ import requests
 from io import BytesIO
 import os
 import re
-
+import textwrap
 
 	
 def fbpost():
@@ -24,7 +24,7 @@ def fbpost():
 		text = f.read()
 
 	text_model = markovify.NewlineText(text)
-	content = text_model.make_short_sentence(60,tries=100)
+	content = text_model.make_short_sentence(100,tries=100)
 
 	r = content.split(' ')
 	remove = ['ng', 'nang', 'sa', 'at', 'ang', 'na', 'kay','ni', 'mga', 'nila','nina']
@@ -87,13 +87,22 @@ def fbpost():
 	image.paste(article,(0,0),article)
 	draw = ImageDraw.Draw(image)
 
-	ar = ImageFont.truetype('arialbd.ttf', 21) ;
+	ar = ImageFont.truetype('arialbd.ttf', 27) ;
+	
+	lines = textwrap.wrap(content, width=50)
+	y_text = 405
+	for line in lines:
+		width, height = ar.getsize(line)
+		draw.text((21, y_text), line, font=ar, fill='#000000')
+		y_text += height
 
-	draw.text((21, 405),content, font=ar, fill='#000000')
+	#draw.text((21, 405),content, font=ar, fill='#000000')
 	image.save('outfile.png','PNG')
+	image.show()
 	
 	del image
 	del draw
+	''''
 	fb_token = os.environ['TOKEN_PAINTMIN']
 	graph = facebook.GraphAPI(access_token=fb_token, version="3.1")
 
@@ -111,3 +120,5 @@ schedule.every().hour.at(':05').do(fbpost)  # run every xx:5:xx / 5 * * * * on c
 while 1:
     schedule.run_pending()
     time.sleep(1)
+'''
+fbpost()

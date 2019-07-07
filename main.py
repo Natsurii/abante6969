@@ -111,7 +111,7 @@ def fbpost():
                 message=content)
 
 	graph.put_object(parent_object=post['post_id'], connection_name='comments',
-                  message='Please hit the mf like button.\n Disclaimer: This is computer generated content. Any headlines that con-incide to real events are purely coincidental.')
+                  message='Please hit the mf like button.\n Disclaimer: This is computer generated content. Any headlines that con-incide to real events are purely coincidental.\n join us on discord! https://discord.gg/YG9wEgE')
 	webhook = DiscordWebhook(url=os.environ['WEBHOOK']) # create embed object for webhook
 	embed = DiscordEmbed(title='The bot created a new post!', description=f'at {str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8))}', color=000000) # 
 	embed.set_footer(text='(c) AbanteBot6969') # set timestamp (default is now) 

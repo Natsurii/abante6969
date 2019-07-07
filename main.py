@@ -113,10 +113,10 @@ def fbpost():
 	graph.put_object(parent_object=post['post_id'], connection_name='comments',
                   message='Please hit the mf like button.\n Disclaimer: This is computer generated content. Any headlines that con-incide to real events are purely coincidental.')
 	webhook = DiscordWebhook(url=os.environ['WEBHOOK']) # create embed object for webhook
-	embed = DiscordEmbed(title='The bot created a new post!', description=f'at {str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8))}', color=c0ffee) # 
+	embed = DiscordEmbed(title='The bot created a new post!', description=f'at {str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8))}', color=000000) # 
 	embed.set_footer(text='(c) AbanteBot6969') # set timestamp (default is now) 
 	embed.set_timestamp() # add fields to embed 
-	embed.add_embed_field(name=content, value=f'https://www.facebook.com/AbanteUnaSaBalita/photos/a.637852686627276/{STR(post['post_id'])}') 
+	embed.add_embed_field(name=content, value='https://www.facebook.com/AbanteUnaSaBalita/photos/a.637852686627276/') 
 
 	webhook.add_embed(embed)
 	webhook.execute()

@@ -116,7 +116,7 @@ def fbpost():
 	embed = DiscordEmbed(title='The bot created a new post!', description=f'at {str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8))}', color=c0ffee) # 
 	embed.set_footer(text='(c) AbanteBot6969') # set timestamp (default is now) 
 	embed.set_timestamp() # add fields to embed 
-	embed.add_embed_field(name=content, value=f'https://www.facebook.com/AbanteUnaSaBalita/photos/a.637852686627276/{post['post_id']}') 
+	embed.add_embed_field(name=content, value=f'https://www.facebook.com/AbanteUnaSaBalita/photos/a.637852686627276/{STR(post['post_id'])}') 
 
 	webhook.add_embed(embed)
 	webhook.execute()

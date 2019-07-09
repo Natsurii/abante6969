@@ -38,7 +38,7 @@ def fbpost():
 				pass
 		
 
-	f = random.choices(r,k=1)
+	f = random.choices(r,k=2)
 	print(f)
 	safe=[]
 	for i in f:

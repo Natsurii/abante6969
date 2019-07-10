@@ -114,7 +114,7 @@ def fbpost():
 	FacebookWebhook.add_field(name=content,value=str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8)),inline=False)
 	FacebookWebhook.set_image(imgurls)
 	FacebookWebhook.set_footer(text=f'\u00A9 AbanteBot6969 | Series of 2019 ',)
-	client.send('test', embed=FacebookWebhook)
+	client.send('\u200b', embed=FacebookWebhook)
 	logging.debug('=====================SUCCESS POSTING FB, Exiting....=====================')
 
 fbpost()

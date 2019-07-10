@@ -4,4 +4,4 @@ schedule
 beautifulsoup4
 markovify
 Pillow
-discord-webhook
+dhooks

@@ -17,8 +17,9 @@ from discord_webhook import DiscordWebhook, DiscordEmbed
 import os
 import re
 import textwrap
+from dhooks import Embed, Webhook
 
-	
+
 def fbpost():
 	logging.debug('Starting Facebook Thread')
 
@@ -45,14 +46,6 @@ def fbpost():
 		safe.append(re.sub('[\W_]', '',str(i)))
 	safe
 	string = '+'.join(safe)
-
-	html = urlopen(f'https://www.philstar.com/search/{string}')
-	#html = urlopen('https://www.philstar.com/search/maine%20saka')
-	print(html)
-	soup = BeautifulSoup(html, 'html.parser')
-	#imgs = soup.find_all('a',class_='img-holder')
-	
-
 
 	html = urlopen(f'https://www.philstar.com/search/{string}/age=720')
 	#html = urlopen('https://www.philstar.com/search/maine%20saka')
@@ -111,6 +104,28 @@ def fbpost():
                 message=content)
 
 	graph.put_object(parent_object=post['post_id'], connection_name='comments',
+<<<<<<< HEAD
+                  message='Please hit the mf like button.\n Disclaimer: This is computer generated content. Any headlines that con-incide to real events are purely coincidental.')
+
+	webhook_url = os.environ['WEBHOOK']
+	client = Webhook(webhook_url)
+
+	FacebookWebhook = Embed()
+	FacebookWebhook.color = 0xC0FFEE# colors should be a hexadecimal value
+	FacebookWebhook.description = 'The bot has new content!\n Is this another sentient post or not?'
+	FacebookWebhook.add_field(
+		name=content,
+		value=str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8)),
+		inline=False
+		)
+	FacebookWebhook.set_image(imgurls)
+	FacebookWebhook.set_footer(
+    text=f'\u00A9 AbanteBot6969 | Series of 2019 ',
+    )
+    client.send('test', embed=FacebookWebhook)
+
+```
+=======
                   message='Please hit the mf like button.\n Disclaimer: This is computer generated content. Any headlines that con-incide to real events are purely coincidental.\n join us on discord! https://discord.gg/YG9wEgE')
 	webhook = DiscordWebhook(url=os.environ['WEBHOOK']) # create embed object for webhook
 	embed = DiscordEmbed(title='The bot created a new post!', description=f'at {str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8))}', color=000000) # 
@@ -120,6 +135,7 @@ def fbpost():
 
 	webhook.add_embed(embed)
 	webhook.execute()
+>>>>>>> 9a17ec6ed01f5f0a8a0251fa592ff4a01b37d217
 	logging.debug('=====================SUCCESS POSTING FB, Exiting....=====================')
 
 fbpost()

@@ -101,10 +101,10 @@ def fbpost():
 	graph = facebook.GraphAPI(access_token=fb_token, version="3.1")
 
 	post = graph.put_photo(image=open('outfile.png',"rb"),
-                message=content)
+				message=content)
 
 	graph.put_object(parent_object=post['post_id'], connection_name='comments',
-                  message='Please hit the mf like button.\n Disclaimer: This is computer generated content. Any headlines that con-incide to real events are purely coincidental.')
+				  message='Please hit the mf like button.\n Disclaimer: This is computer generated content. Any headlines that con-incide to real events are purely coincidental.')
 
 	webhook_url = os.environ['WEBHOOK']
 	client = Webhook(webhook_url)
@@ -112,17 +112,10 @@ def fbpost():
 	FacebookWebhook = Embed()
 	FacebookWebhook.color = 0xC0FFEE# colors should be a hexadecimal value
 	FacebookWebhook.description = 'The bot has new content!\n Is this another sentient post or not?'
-	FacebookWebhook.add_field(
-		name=content,
-		value=str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8)),
-		inline=False
-		)
+	FacebookWebhook.add_field(name=content,value=str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8)),inline=False)
 	FacebookWebhook.set_image(imgurls)
-	FacebookWebhook.set_footer(
-    text=f'\u00A9 AbanteBot6969 | Series of 2019 ',
-    )
-    client.send('test', embed=FacebookWebhook)
-
+	FacebookWebhook.set_footer(text=f'\u00A9 AbanteBot6969 | Series of 2019 ',)
+	client.send('test', embed=FacebookWebhook)
 	logging.debug('=====================SUCCESS POSTING FB, Exiting....=====================')
 
 fbpost()

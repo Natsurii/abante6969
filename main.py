@@ -39,7 +39,7 @@ def fbpost():
 				pass
 		
 
-	f = random.choices(r,k=2)
+	f = random.choices(r,k=1)
 	print(f)
 	safe=[]
 	for i in f:
@@ -104,7 +104,6 @@ def fbpost():
                 message=content)
 
 	graph.put_object(parent_object=post['post_id'], connection_name='comments',
-<<<<<<< HEAD
                   message='Please hit the mf like button.\n Disclaimer: This is computer generated content. Any headlines that con-incide to real events are purely coincidental.')
 
 	webhook_url = os.environ['WEBHOOK']
@@ -124,18 +123,6 @@ def fbpost():
     )
     client.send('test', embed=FacebookWebhook)
 
-```
-=======
-                  message='Please hit the mf like button.\n Disclaimer: This is computer generated content. Any headlines that con-incide to real events are purely coincidental.\n join us on discord! https://discord.gg/YG9wEgE')
-	webhook = DiscordWebhook(url=os.environ['WEBHOOK']) # create embed object for webhook
-	embed = DiscordEmbed(title='The bot created a new post!', description=f'at {str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8))}', color=000000) # 
-	embed.set_footer(text='(c) AbanteBot6969') # set timestamp (default is now) 
-	embed.set_timestamp() # add fields to embed 
-	embed.add_embed_field(name=content, value='https://www.facebook.com/AbanteUnaSaBalita/photos/a.637852686627276/') 
-
-	webhook.add_embed(embed)
-	webhook.execute()
->>>>>>> 9a17ec6ed01f5f0a8a0251fa592ff4a01b37d217
 	logging.debug('=====================SUCCESS POSTING FB, Exiting....=====================')
 
 fbpost()

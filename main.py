@@ -13,7 +13,6 @@ import urllib.request
 from bs4 import BeautifulSoup
 import requests
 from io import BytesIO
-from discord_webhook import DiscordWebhook, DiscordEmbed
 import os
 import re
 import textwrap

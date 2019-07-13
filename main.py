@@ -1,5 +1,3 @@
-import threading
-import tweepy
 import facebook
 import random
 import logging
@@ -8,7 +6,6 @@ import time
 import datetime
 import markovify
 from PIL import Image, ImageFont, ImageDraw, ImageOps
-from urllib.request import urlopen
 import urllib.request
 from bs4 import BeautifulSoup
 import requests
@@ -18,61 +15,82 @@ import re
 import textwrap
 from dhooks import Embed, Webhook
 
+logging.basicConfig(level=logging.INFO)
 
-def fbpost():
-	logging.debug('Starting Facebook Thread')
-
+def headline_factory():
+	"""Creates and generates the headline."""
+	logging.info('Creating Headline...')
 	with open("headlines.txt",encoding='utf-8-sig') as f:
+		logging.info('Opening corpus1...')
 		text = f.read()
 
-	text_model = markovify.NewlineText(text)
-	content = text_model.make_short_sentence(100,tries=100)
+	with open("headlines.txt",encoding='utf-8-sig') as f:
+		logging.info('Opening corpus2...')
+		text2 = f.read()
 
-	r = content.split(' ')
-	remove = ['ng', 'nang', 'sa', 'at', 'ang', 'na', 'kay','ni', 'mga', 'nila','nina']
+	text_model1 = markovify.NewlineText(text)
+	text_model2 = markovify.NewlineText(text2)
+	model_combo = markovify.combine([ text_model1, text_model2 ], [ 1.5, 1 ])
+	content = model_combo.make_short_sentence(100,tries=100)
+	logging.info(f'Headline created! \n {content}')
+	return content
+
+def query_sanitizer(content):
+	"""Sanitize and create keyword queries for searching images."""
+	headstring = content.split(' ')
+	remove = ['ng', 'nang', 'sa', 'at', 'ang', 'na', 'kay','ni', 'mga', 'nila', 'nina', 'si', 'may','dahil', ' ']
 	for i in remove:
-		for f in r:
-			if i == f:
-				r.remove(f)
+		for f in headstring:
+			if (i.casefold() == f.casefold()):
+				headstring.remove(f)
 			else:
 				pass
-		
+	logging.info('The query has been sanitized.')
+	query = random.sample(set(headstring),3)
 
-	f = random.choices(r,k=1)
-	print(f)
 	safe=[]
-	for i in f:
+	for i in query: #for UTF-8 and Non-alphanumeric
 		safe.append(re.sub('[\W_]', '',str(i)))
-	safe
-	string = '+'.join(safe)
+	logging.info('The keyword has been created.')
+	return safe
 
-	html = urlopen(f'https://www.philstar.com/search/{string}/age=720')
-	#html = urlopen('https://www.philstar.com/search/maine%20saka')
-	print(html)
-	soup = BeautifulSoup(html, 'html.parser')
-	#imgs = soup.find_all('a',class_='img-holder')
-	
+def miso_soup(ingridient, type):
+	"""Beautiful Soup necessary image."""
+	souped=[]
+	if type == 0: #Abante main page
+		for i in ingridient:
+			req = urllib.request.Request(f"https://www.abante.com.ph/?s={i}", None, {'User-agent' : 'Mozilla/5.0 (Windows; U; Windows NT 5.1; de; rv:1.9.1.5) Gecko/20091102 Firefox/3.5.5'})
+			response = urllib.request.urlopen(req).read()
+			soup = BeautifulSoup(response, 'html.parser')
+			heat = soup.find('div', attrs={'class':'col-sm-8 content-column'})
+			for i in heat.find_all('div', attrs={'class':'featured clearfix'}):
+				read = i.find('a')
+				spooned = read['data-src']
+				souped.append(spooned)
 
-	img = []
-	for i in soup.find_all('div', attrs={'class':'tiles_image'}):
-		print(i.find('img'))
-		img.append(i.find('img'))
-	img
-	print(img)
-	urls =[]
-	for i in img:
+	else:
+		for i in ingridient:
+			html = urlopen(f'https://www.philstar.com/search/{i}/age=720')
+			soup = BeautifulSoup(html, 'html.parser')
+			for i in soup.find_all('div', attrs={'class':'tiles_image'}):
+				read = i.find('img')
+				spooned = read['src']
+				souped.append(spooned)
 
-		print(i['src'])
-		urls.append(i['src'])
-	urls
-	imgurls = random.choice(urls)
-	urllib.request.urlretrieve(imgurls, "preface.png")
+	image_url = random.choice(souped)
 
+	logging.info('Image souped and spooned successfully.')
+	return image_url
 
+def image_factory(photo, content):
 	size = width, height = 712, 483;
-
 	image = Image.new('RGB', size, 'white')
-	preface = Image.open("preface.png")
+
+	response = urllib.request.urlopen(photo)
+	contents = BytesIO(response.read())
+	preface = Image.open(contents)
+
+	logging.info('Image Received, Generating...')
 
 	article = Image.open('article.png')
 
@@ -90,21 +108,27 @@ def fbpost():
 		draw.text((21, y_text), line, font=ar, fill='#000000')
 		y_text += height
 
-	#draw.text((21, 405),content, font=ar, fill='#000000')
-	image.save('outfile.png','PNG')
+	logging.info('Image generated!')
+	with BytesIO() as output:
+		image.save(output, format="PNG")
+		imgbyte = output.getvalue()
+	return imgbyte
 
-	del image
-	del draw
-	
+def facebook_poster(image,caption):
 	fb_token = os.environ['TOKEN_PAINTMIN']
 	graph = facebook.GraphAPI(access_token=fb_token, version="3.1")
 
-	post = graph.put_photo(image=open('outfile.png',"rb"),
-				message=content)
+	post = graph.put_photo(image=image, message=caption)
 
-	graph.put_object(parent_object=post['post_id'], connection_name='comments',
-				  message='Please hit the mf like button.\n Disclaimer: This is computer generated content. Any headlines that con-incide to real events are purely coincidental.')
+	comment='''Please like our page for more content.
+	Disclaimer: This is computer generated content.
+	Any headlines that con-incide to real events are purely coincidental.
+	For more inquiries, Join us on Discord: https://discord.gg/YG9wEgE
+	'''
+	graph.put_object(parent_object=post['post_id'], connection_name='comments',message=comment)
+	logging.info('Image posted!')
 
+def webhooker(url,content):
 	webhook_url = os.environ['WEBHOOK']
 	client = Webhook(webhook_url)
 
@@ -112,14 +136,28 @@ def fbpost():
 	FacebookWebhook.color = 0xC0FFEE# colors should be a hexadecimal value
 	FacebookWebhook.description = 'The bot has new content!\n Is this another sentient post or not?'
 	FacebookWebhook.add_field(name=content,value=str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8)),inline=False)
-	FacebookWebhook.set_image(imgurls)
+	FacebookWebhook.set_image(url)
 	FacebookWebhook.set_footer(text=f'\u00A9 AbanteBot6969 | Series of 2019 ',)
 	client.send('\u200b', embed=FacebookWebhook)
-	logging.debug('=====================SUCCESS POSTING FB, Exiting....=====================')
+	logging.info('===================== SUCCESS!! , Exiting....=====================')
 
-fbpost()
-schedule.every().hour.at(':35').do(fbpost) # run every xx:35:xx / 35 * * * * on cron 
-schedule.every().hour.at(':05').do(fbpost)  # run every xx:5:xx / 5 * * * * on cron 
+
+def main():
+	headlines = headline_factory() #strings
+	try:
+		keywords = query_sanitizer(content=headlines) 
+	except ValueError as e:
+		pass
+		logging.warning(e)
+		logging.info('Shit, your headlines sucks. DECLINED')
+	finally:
+		souped_photo = miso_soup(ingridient=keywords, type=0)
+		img = image_factory(photo=souped_photo, content=headlines)
+		facebook_poster(image=img,caption=headlines)
+		webhooker(url=souped_photo,content=headlines)
+main()
+schedule.every().hour.at(':35').do(main) # run every xx:35:xx / 35 * * * * on cron 
+schedule.every().hour.at(':05').do(main)  # run every xx:5:xx / 5 * * * * on cron 
 
 while 1:
 	schedule.run_pending()

@@ -13,9 +13,9 @@ from bs4 import BeautifulSoup
 import requests
 from io import BytesIO
 hl=[]
-text = open('headlines.txt','a+',encoding='utf-8-sig')
+text = open('headlines_new.txt','a+',encoding='utf-8-sig')
 def get_art(page):
-	html = urlopen(f'https://www.abante.com.ph/category/ent{page}')
+	html = urlopen(f'https://www.abante.com.ph/{page}')
 	soup = BeautifulSoup(html, 'html.parser')
 	art = soup.find_all('a',class_='post-title post-url')
 	headlines =[]
@@ -25,7 +25,7 @@ def get_art(page):
 		hl.append(val)
 get_art(page='/')
 
-for i in range(2,50):
+for i in range(126,150):
 	ref =f'/page/{i}'
 	get_art(page=ref)
 	print(f'done page{i}')

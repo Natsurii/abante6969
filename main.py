@@ -30,7 +30,7 @@ def headline_factory():
 
 	text_model1 = markovify.NewlineText(text)
 	text_model2 = markovify.NewlineText(text2)
-	model_combo = markovify.combine([ text_model1, text_model2 ], [ 1.5, 1 ])
+	model_combo = markovify.combine([ text_model1, text_model2 ], [ 1.5, 0.5 ])
 	content = model_combo.make_short_sentence(100,tries=100)
 	logging.info(f'Headline created! \n {content}')
 	return content

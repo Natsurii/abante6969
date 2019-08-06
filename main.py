@@ -68,7 +68,7 @@ def miso_soup(ingridient, type):
 				spooned = read['data-src']
 				souped.append(spooned)
 
-	else:
+	elif type == 1:
 		for i in ingridient:
 			html = urlopen(f'https://www.philstar.com/search/{i}/age=720')
 			soup = BeautifulSoup(html, 'html.parser')

@@ -70,7 +70,7 @@ def miso_soup(ingridient, type):
 
 	elif type == 1:
 		for i in ingridient:
-			html = urlopen(f'https://www.philstar.com/search/{i}/age=720')
+			html = urllib.request.urlopen(f'https://www.philstar.com/search/{i}/age=720').read()
 			soup = BeautifulSoup(html, 'html.parser')
 			for i in soup.find_all('div', attrs={'class':'tiles_image'}):
 				read = i.find('img')

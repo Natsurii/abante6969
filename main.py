@@ -24,14 +24,8 @@ def headline_factory():
 		logging.info('Opening corpus1...')
 		text = f.read()
 
-	with open("headlines.txt",encoding='utf-8-sig') as f:
-		logging.info('Opening corpus2...')
-		text2 = f.read()
-
 	text_model1 = markovify.NewlineText(text)
-	text_model2 = markovify.NewlineText(text2)
-	model_combo = markovify.combine([ text_model1, text_model2 ], [ 1.5, 0.5 ])
-	content = model_combo.make_short_sentence(100,tries=100)
+	content = text_model1.make_short_sentence(100,tries=100)
 	logging.info(f'Headline created! \n {content}')
 	return content
 
@@ -157,7 +151,7 @@ def main():
 		webhooker(url=souped_photo,content=headlines)
 main()
 schedule.every().hour.at(':35').do(main) # run every xx:35:xx / 35 * * * * on cron 
-schedule.every().hour.at(':05').do(main)  # run every xx:5:xx / 5 * * * * on cron 
+#schedule.every().hour.at(':05').do(main)  # run every xx:5:xx / 5 * * * * on cron 
 
 while 1:
 	schedule.run_pending()

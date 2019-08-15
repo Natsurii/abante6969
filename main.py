@@ -145,7 +145,7 @@ def main():
 		logging.warning(e)
 		logging.info('Shit, your headlines sucks. DECLINED')
 	finally:
-		souped_photo = miso_soup(ingridient=keywords, type=1)
+		souped_photo = miso_soup(ingridient=keywords, type=0)
 		img = image_factory(photo=souped_photo, content=headlines)
 		facebook_poster(image=img,caption=headlines)
 		webhooker(url=souped_photo,content=headlines)

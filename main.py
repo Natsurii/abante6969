@@ -151,7 +151,7 @@ def main():
 		webhooker(url=souped_photo,content=headlines)
 main()
 schedule.every().hour.at(':35').do(main) # run every xx:35:xx / 35 * * * * on cron 
-#schedule.every().hour.at(':05').do(main)  # run every xx:5:xx / 5 * * * * on cron 
+schedule.every().hour.at(':05').do(main)  # run every xx:5:xx / 5 * * * * on cron 
 
 while 1:
 	schedule.run_pending()

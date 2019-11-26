@@ -24,8 +24,14 @@ def headline_factory():
 		logging.info('Opening corpus1...')
 		text = f.read()
 
+	with open("seagames.txt",encoding='utf-8-sig') as f:
+		logging.info('Opening corpus2...')
+		text2 = f.read()
+
 	text_model1 = markovify.NewlineText(text)
-	content = text_model1.make_short_sentence(100,tries=100)
+	sg = markovify.NewlineText(text2)
+	model = markovify.combine([sg, text_model1], [1.5, 0.5])
+	content = model.make_short_sentence(100,tries=100)
 	logging.info(f'Headline created! \n {content}')
 	return content
 
@@ -114,7 +120,9 @@ def facebook_poster(image,caption):
 
 	post = graph.put_photo(image=image, message=caption)
 
-	comment='''Please like our page for more content.
+	comment='''
+	Sea Games Edition
+	Please like our page for more content.
 	Disclaimer: This is computer generated content.
 	Any headlines that con-incide to real events are purely coincidental.
 	For more inquiries, Join us on Discord: https://discord.gg/YG9wEgE

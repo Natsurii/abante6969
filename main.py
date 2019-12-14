@@ -28,8 +28,8 @@ def headline_factory():
 		logging.info('Opening corpus2...')
 		text2 = f.read()
 
-	text_model1 = markovify.NewlineText(text)
-	definitive_model = markovify.Text(string(text_model1))
+	text_model1 = markovify.Text(text)
+#	definitive_model = markovify.Text(string(text_model1))
 #	sg = markovify.NewlineText(text2)
 #	model = markovify.combine([sg, text_model1], [1.5, 0.2])
 	initword  = ['Pasko','pasko','Christmas','christmas','New year','new year', 'regalo', 'bagong taon', 'paputok', 'pailaw', 'fireworks', 'firecracker', 'aguinaldo', 'bonus']

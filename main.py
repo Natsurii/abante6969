@@ -33,7 +33,7 @@ def headline_factory():
 #	model = markovify.combine([sg, text_model1], [1.5, 0.2])
 	initword  = ['Pasko','pasko','Christmas','christmas','New year','new year', 'regalo', 'bagong taon', 'paputok', 'pailaw', 'fireworks', 'firecracker', 'aguinaldo', 'bonus']
 #	content = text_model1.make_short_sentence(100, tries=100)
-	corp = text_model1.corpus(initword)
+	corp = text_model1.generate_corpus(initword)
 	content = corp.make_sentence_with_words(initword, tries=50)
 	logging.info(f'Headline created! \n {content}')
 	return content

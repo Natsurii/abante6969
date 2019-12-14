@@ -29,9 +29,10 @@ def headline_factory():
 		text2 = f.read()
 
 	text_model1 = markovify.NewlineText(text)
-	sg = markovify.NewlineText(text2)
-	model = markovify.combine([sg, text_model1], [1.5, 0.2])
-	content = model.make_short_sentence(100,tries=100)
+#	sg = markovify.NewlineText(text2)
+#	model = markovify.combine([sg, text_model1], [1.5, 0.2])
+	initword = random.choice(['Pasko','pasko','Christmas','christmas','New year','new year', 'regalo', 'bagong taon', 'paputok', 'pailaw', 'fireworks', 'firecracker', 'aguinaldo', 'bonus'])
+	content = textmodel1.make_short_sentence(100, init_state = initword, tries=100)
 	logging.info(f'Headline created! \n {content}')
 	return content
 
@@ -121,7 +122,7 @@ def facebook_poster(image,caption):
 	post = graph.put_photo(image=image, message=caption)
 
 	comment='''
-	Sea Games Edition
+	Holidays Edition
 	Please like our page for more content.
 	Disclaimer: This is computer generated content.
 	Any headlines that con-incide to real events are purely coincidental.

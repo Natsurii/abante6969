@@ -28,12 +28,12 @@ def headline_factory():
 		logging.info('Opening corpus2...')
 		text2 = f.read()
 
-	text_model1 = markovify.Text(text)
+	text_model1 = markovify.NewlineText(text)
 #	definitive_model = markovify.Text(string(text_model1))
 #	sg = markovify.NewlineText(text2)
 #	model = markovify.combine([sg, text_model1], [1.5, 0.2])
-	initword  = ['Pasko','pasko','Christmas','christmas','New year','new year', 'regalo', 'bagong taon', 'paputok', 'pailaw', 'fireworks', 'firecracker', 'aguinaldo', 'bonus']
-	content = text_model1.make_sentence_from_start(beginning = random.choice(initword), strict = False, tries=100)
+	initword  = ['Pasko','pasko','Christmas','christmas','New year','new year', 'regalo', 'bagong taon', 'paputok', 'fireworks', 'firecracker', 'aguinaldo']
+	content = text_model1.make_sentence_with_start(beginning = random.choice(initword), strict = False, tries=100)
 	logging.info(f'Headline created! \n {content}')
 	return content
 

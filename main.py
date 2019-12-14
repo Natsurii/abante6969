@@ -28,7 +28,7 @@ def headline_factory():
 		logging.info('Opening corpus2...')
 		text2 = f.read()
 
-	text_model1 = markovify.NewlineText(text)
+	text_model1 = markovify.NewlineText(text, state_size = 3)
 #	definitive_model = markovify.Text(string(text_model1))
 #	sg = markovify.NewlineText(text2)
 #	model = markovify.combine([sg, text_model1], [1.5, 0.2])

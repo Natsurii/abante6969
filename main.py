@@ -32,7 +32,8 @@ def headline_factory():
 #	sg = markovify.NewlineText(text2)
 #	model = markovify.combine([sg, text_model1], [1.5, 0.2])
 	initword = random.choice(['Pasko','pasko','Christmas','christmas','New year','new year', 'regalo', 'bagong taon', 'paputok', 'pailaw', 'fireworks', 'firecracker', 'aguinaldo', 'bonus'])
-	content = text_model1.make_short_sentence(100, init_state = initword, tries=100)
+#	content = text_model1.make_short_sentence(100, tries=100)
+	content = text_model1.make_sentence_with_words(initword, tries=50)
 	logging.info(f'Headline created! \n {content}')
 	return content
 

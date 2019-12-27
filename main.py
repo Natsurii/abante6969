@@ -149,6 +149,19 @@ def tweet_image(filename, message):
 	api.update_with_media(filename, status=message)
 	os.remove(filename)
 
+def webhooker(url,content):
+	webhook_url = os.environ['WEBHOOK']
+	client = Webhook(webhook_url)
+	logging.info('Image posted! on facebook')
+
+	FacebookWebhook = Embed()
+	FacebookWebhook.color = 0xC0FFEE# colors should be a hexadecimal value
+	FacebookWebhook.description = 'The bot has new content!\n Is this another sentient post or not?'
+	FacebookWebhook.add_field(name=content,value=str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8)),inline=False)
+	FacebookWebhook.set_image(url)
+	FacebookWebhook.set_footer(text=f'\u00A9 AbanteBot6969 | Series of 2019 ',)
+	client.send('\u200b', embed=FacebookWebhook)
+	logging.info('===================== SUCCESS!! , Exiting....=====================')
 
 def main():
 	headlines = headline_factory() #strings
@@ -162,6 +175,8 @@ def main():
 		souped_photo = miso_soup(ingridient=keywords, type=1)
 		img = image_factory(photo=souped_photo, content=headlines, save=0)
 		facebook_poster(image=img,caption=headlines)
+		webhooker(url=souped_photo,content=headlines)
+
 
 def tweeter():
 	headlines = headline_factory() #strings
@@ -175,6 +190,7 @@ def tweeter():
 		souped_photo = miso_soup(ingridient=keywords, type=1)
 		img = image_factory(photo=souped_photo, content=headlines, save=1)
 		tweet_image(filename = 'outfile.png', message =headlines)
+		webhooker(url=souped_photo,content=headlines)
 
 main()
 tweeter()

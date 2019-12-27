@@ -1,4 +1,5 @@
 import facebook
+import tweepy
 import random
 import logging
 import schedule
@@ -14,6 +15,7 @@ import os
 import re
 import textwrap
 from dhooks import Embed, Webhook
+
 
 logging.basicConfig(level=logging.INFO)
 
@@ -85,7 +87,7 @@ def miso_soup(ingridient, type):
 	logging.info('Image souped and spooned successfully.')
 	return image_url
 
-def image_factory(photo, content):
+def image_factory(photo, content, save):
 	size = width, height = 712, 483;
 	image = Image.new('RGB', size, 'white')
 
@@ -112,10 +114,13 @@ def image_factory(photo, content):
 		y_text += height
 
 	logging.info('Image generated!')
-	with BytesIO() as output:
-		image.save(output, format="PNG")
-		imgbyte = output.getvalue()
-	return imgbyte
+	if save == 1: # 1 to save the image
+		image.save('outfile.png', format="PNG")
+	elif save == 0:
+		with BytesIO() as output:
+			image.save(output, format="PNG")
+			imgbyte = output.getvalue()
+		return imgbyte
 
 def facebook_poster(image,caption):
 	fb_token = os.environ['TOKEN_PAINTMIN']
@@ -131,20 +136,18 @@ def facebook_poster(image,caption):
 	For more inquiries, Join us on Discord: https://discord.gg/YG9wEgE
 	'''
 	graph.put_object(parent_object=post['post_id'], connection_name='comments',message=comment)
-	logging.info('Image posted!')
+	logging.info('Image posted! on facebook')
 
-def webhooker(url,content):
-	webhook_url = os.environ['WEBHOOK']
-	client = Webhook(webhook_url)
-
-	FacebookWebhook = Embed()
-	FacebookWebhook.color = 0xC0FFEE# colors should be a hexadecimal value
-	FacebookWebhook.description = 'The bot has new content!\n Is this another sentient post or not?'
-	FacebookWebhook.add_field(name=content,value=str(datetime.datetime.utcnow() + datetime.timedelta(hours=+8)),inline=False)
-	FacebookWebhook.set_image(url)
-	FacebookWebhook.set_footer(text=f'\u00A9 AbanteBot6969 | Series of 2019 ',)
-	client.send('\u200b', embed=FacebookWebhook)
-	logging.info('===================== SUCCESS!! , Exiting....=====================')
+def tweet_image(filename, message):
+	consumer_key = os.environ['TWITTER_CONSUMERKEY']
+	consumer_secret = os.environ['TWITTER_CONSUMERSECRET']
+	access_token = os.environ['TWITTER_TOKEN']
+	access_token_secret = os.environ['TWITTER_TOKENSECRET']
+	auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+	auth.set_access_token(access_token, access_token_secret)
+	api = tweepy.API(auth)
+	api.update_with_media(filename, status=message)
+	os.remove(filename)
 
 
 def main():
@@ -157,12 +160,28 @@ def main():
 		logging.info('Shit, your headlines sucks. DECLINED')
 	finally:
 		souped_photo = miso_soup(ingridient=keywords, type=1)
-		img = image_factory(photo=souped_photo, content=headlines)
+		img = image_factory(photo=souped_photo, content=headlines, save=0)
 		facebook_poster(image=img,caption=headlines)
-		webhooker(url=souped_photo,content=headlines)
+
+def tweeter():
+	headlines = headline_factory() #strings
+	try:
+		keywords = query_sanitizer(content=headlines) 
+	except ValueError as e:
+		pass
+		logging.warning(e)
+		logging.info('Shit, your headlines sucks. DECLINED')
+	finally:
+		souped_photo = miso_soup(ingridient=keywords, type=1)
+		img = image_factory(photo=souped_photo, content=headlines, save=1)
+		tweet_image(filename = 'outfile.png', message =headlines)
+
 main()
+tweeter()
 schedule.every().hour.at(':35').do(main) # run every xx:35:xx / 35 * * * * on cron 
 schedule.every().hour.at(':05').do(main)  # run every xx:5:xx / 5 * * * * on cron 
+schedule.every().hour.at(':10').do(tweeter)
+schedule.every().hour.at(':40').do(tweeter)
 
 while 1:
 	schedule.run_pending()

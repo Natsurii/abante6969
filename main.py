@@ -149,7 +149,9 @@ def tweet_image(filename, message):
 	api.update_with_media(filename, status=message)
 	os.remove(filename)
 
-def webhooker(url,content):
+def webhooker():
+	content = 'wwwweeeeeee'
+	url = 'dummy.com'
 	webhook_url = os.environ['WEBHOOK']
 	client = Webhook(webhook_url)
 	logging.info('Image posted! on facebook')
@@ -175,7 +177,6 @@ def main():
 		souped_photo = miso_soup(ingridient=keywords, type=1)
 		img = image_factory(photo=souped_photo, content=headlines, save=0)
 		facebook_poster(image=img,caption=headlines)
-		webhooker(url=souped_photo,content=headlines)
 
 
 def tweeter():
@@ -190,7 +191,6 @@ def tweeter():
 		souped_photo = miso_soup(ingridient=keywords, type=1)
 		img = image_factory(photo=souped_photo, content=headlines, save=1)
 		tweet_image(filename = 'outfile.png', message =headlines)
-		webhooker(url=souped_photo,content=headlines)
 
 main()
 tweeter()
@@ -198,6 +198,8 @@ schedule.every().hour.at(':35').do(main) # run every xx:35:xx / 35 * * * * on cr
 schedule.every().hour.at(':05').do(main)  # run every xx:5:xx / 5 * * * * on cron 
 schedule.every().hour.at(':10').do(tweeter)
 schedule.every().hour.at(':40').do(tweeter)
+schedule.every().hour.at(':13').do(webhooker)
+schedule.every().hour.at(':43').do(webhooker)
 
 while 1:
 	schedule.run_pending()

@@ -22,14 +22,13 @@ logging.basicConfig(level=logging.INFO)
 def headline_factory():
 	"""Creates and generates the headline."""
 	logging.info('Creating Headline...')
-	with open("headlines.txt",encoding='utf-8-sig') as f:
+	with open("ncov.txt",encoding='utf-8-sig') as f:
 		logging.info('Opening corpus1...')
 		text = f.read()
 
-	with open("seagames.txt",encoding='utf-8-sig') as f:
-		logging.info('Opening corpus2...')
-		text2 = f.read()
-
+#	with open("seagames.txt",encoding='utf-8-sig') as f:
+#		logging.info('Opening corpus2...')
+#		text2 = f.read()
 	text_model1 = markovify.NewlineText(text, state_size = 3)
 #	definitive_model = markovify.Text(string(text_model1))
 #	sg = markovify.NewlineText(text2)
@@ -129,7 +128,7 @@ def facebook_poster(image,caption):
 	post = graph.put_photo(image=image, message=caption)
 
 	comment='''
-	Holidays Edition
+	Chinese Flu Edition
 	Please like our page for more content.
 	Disclaimer: This is computer generated content.
 	Any headlines that con-incide to real events are purely coincidental.
@@ -198,8 +197,6 @@ schedule.every().hour.at(':35').do(main) # run every xx:35:xx / 35 * * * * on cr
 schedule.every().hour.at(':05').do(main)  # run every xx:5:xx / 5 * * * * on cron 
 schedule.every().hour.at(':10').do(tweeter)
 schedule.every().hour.at(':40').do(tweeter)
-schedule.every().hour.at(':13').do(webhooker)
-schedule.every().hour.at(':43').do(webhooker)
 
 while 1:
 	schedule.run_pending()

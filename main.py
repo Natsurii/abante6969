@@ -22,7 +22,7 @@ logging.basicConfig(level=logging.INFO)
 def headline_factory():
 	"""Creates and generates the headline."""
 	logging.info('Creating Headline...')
-	with open("ncov.txt",encoding='utf-8-sig') as f:
+	with open("[fresh]aprilfools.txt",encoding='utf-8-sig') as f:
 		logging.info('Opening corpus1...')
 		text = f.read()
 
